@@ -1,6 +1,31 @@
 version: '3.9'
 services:
+  mysql:
+    container_name: album-maker-mysql
+    image: mysql:8
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: album-maker-mysql
+    volumes:
+      - dbdata:/var/lib/mysql
+    restart: always
+  backend:
+    depends_on:
+      - mysql
+    container_name: album-maker-backend
+    build: ./backend
+    ports:
+      - 5100:4000
+    volumes:
+      - ./backend:/app
+    env_file:
+      - ./backend/.env
+    restart: always
   client:
+    depends_on:
+      - backend
     build: ./client
     container_name: album-maker-client
     ports:
@@ -10,3 +35,6 @@ services:
       - /app/node_modules
       - /app/.next
     restart: always
+  
+volumes:
+  dbdata:
