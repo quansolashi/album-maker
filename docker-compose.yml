@@ -1,0 +1,12 @@
+version: '3.9'
+services:
+  client:
+    build: ./client
+    container_name: album-maker-client
+    ports:
+      - 5000:3000
+    volumes:
+      - ./client:/app
+      - /app/node_modules
+      - /app/.next
+    restart: always
