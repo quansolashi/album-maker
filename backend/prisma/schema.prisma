@@ -14,8 +14,18 @@ model User {
   id       String @id @default(uuid())
   name     String @db.VarChar(255)
   email    String @unique @db.VarChar(255)
-  provider String @default("local")
+  password String @db.VarChar(255)
 
-  createdAt DateTime @db.Timestamp(0)
-  updatedAt DateTime @db.Timestamp(0)
+  createdAt           DateTime              @db.Timestamp(0)
+  updatedAt           DateTime              @db.Timestamp(0)
+  PersonalAccessToken PersonalAccessToken[]
+}
+
+model PersonalAccessToken {
+  id           String    @id @default(uuid())
+  accessToken  String    @unique @db.VarChar(255)
+  refreshToken String    @unique @db.VarChar(255)
+  expiredAt    DateTime?
+  user         User      @relation(fields: [userId], references: [id], map: "personal_access_token_user_fk")
+  userId       String
 }
