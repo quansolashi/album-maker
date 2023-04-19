@@ -1,19 +1,21 @@
 version: '3.9'
 services:
-  mysql:
+  db:
     container_name: album-maker-mysql
     image: mysql:8
     ports:
       - 3306:3306
     environment:
       MYSQL_ROOT_PASSWORD: password
-      MYSQL_DATABASE: album-maker-mysql
+      MYSQL_DATABASE: album_maker_mysql
+    healthcheck:
+      test: "mysqladmin -p$$MYSQL_ROOT_PASSWORD ping"
     volumes:
       - dbdata:/var/lib/mysql
     restart: always
   backend:
     depends_on:
-      - mysql
+      - db
     container_name: album-maker-backend
     build: ./backend
     ports:
